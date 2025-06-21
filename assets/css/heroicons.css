@@ -1,0 +1,15 @@
+/**
+ * CSS cho heroicons
+ * 
+ * @package NTQ AI Connector
+ * @since 1.0.0
+ */
+
+.ntq-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}

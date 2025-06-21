@@ -1,0 +1,539 @@
+/**
+ * CSS cho frontend của plugin
+ *
+ * @package NTQ AI Connector
+ * @since 1.0.0
+ */
+
+/* Widget */
+.ntq-ai-widget {
+    position: fixed;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.ntq-ai-widget-bottom-right {
+    bottom: 20px;
+    right: 20px;
+}
+
+.ntq-ai-widget-bottom-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+.ntq-ai-widget-top-right {
+    top: 20px;
+    right: 20px;
+}
+
+.ntq-ai-widget-top-left {
+    top: 20px;
+    left: 20px;
+}
+
+/* Widget Button */
+.ntq-ai-widget-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.ntq-ai-widget-button:hover,
+.ntq-ai-widget-button:focus {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.ntq-ai-widget-button:active {
+    transform: scale(0.95);
+}
+
+.ntq-ai-widget-button .ntq-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.ntq-ai-widget-button-text {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+/* Widget Menu */
+.ntq-ai-widget-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 300px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    display: none;
+    overflow: hidden;
+}
+
+.ntq-ai-widget-bottom-left .ntq-ai-widget-menu {
+    left: 0;
+    right: auto;
+}
+
+.ntq-ai-widget-top-right .ntq-ai-widget-menu {
+    top: 70px;
+    bottom: auto;
+}
+
+.ntq-ai-widget-top-left .ntq-ai-widget-menu {
+    top: 70px;
+    bottom: auto;
+    left: 0;
+    right: auto;
+}
+
+.ntq-ai-widget-menu.active {
+    display: block;
+}
+
+.ntq-ai-widget-menu-header {
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.ntq-ai-widget-menu-close {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+}
+
+.ntq-ai-widget-menu-close .ntq-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.ntq-ai-widget-menu-items {
+    padding: 12px;
+}
+
+.ntq-ai-widget-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.ntq-ai-widget-menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.ntq-ai-widget-menu-item:hover {
+    background-color: rgba(124, 58, 237, 0.1);
+}
+
+.ntq-ai-widget-menu-item .ntq-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    color: #7C3AED;
+}
+
+.ntq-ai-widget-menu-footer {
+    padding: 10px 16px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Modal */
+.ntq-ai-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ntq-ai-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.ntq-ai-modal-content {
+    background-color: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.ntq-ai-modal-header {
+    padding: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ntq-ai-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.ntq-ai-modal-close {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+}
+
+.ntq-ai-modal-close .ntq-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.ntq-ai-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.ntq-ai-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.ntq-ai-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(124, 58, 237, 0.1);
+    border-radius: 50%;
+    border-top-color: #7C3AED;
+    animation: ntq-ai-spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes ntq-ai-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.ntq-ai-result {
+    line-height: 1.6;
+    display: none;
+}
+
+.ntq-ai-result.active {
+    display: block;
+}
+
+/* Định dạng Markdown */
+.ntq-ai-result h1, 
+.ntq-ai-result h2, 
+.ntq-ai-result h3, 
+.ntq-ai-result h4 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.ntq-ai-result h1 {
+    font-size: 1.6em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+}
+
+.ntq-ai-result h2 {
+    font-size: 1.4em;
+}
+
+.ntq-ai-result h3 {
+    font-size: 1.2em;
+}
+
+.ntq-ai-result p {
+    margin-bottom: 16px;
+}
+
+.ntq-ai-result p:last-child {
+    margin-bottom: 0;
+}
+
+.ntq-ai-result ul, 
+.ntq-ai-result ol {
+    margin-bottom: 16px;
+    padding-left: 2em;
+}
+
+.ntq-ai-result ul li, 
+.ntq-ai-result ol li {
+    margin-bottom: 0.5em;
+}
+
+.ntq-ai-result blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    color: #666;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.ntq-ai-result strong, 
+.ntq-ai-result b {
+    font-weight: bold;
+}
+
+.ntq-ai-result em, 
+.ntq-ai-result i {
+    font-style: italic;
+}
+
+.ntq-ai-result code {
+    font-family: monospace;
+    background: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.ntq-ai-result pre {
+    background: #f5f5f5;
+    padding: 1em;
+    overflow: auto;
+    border-radius: 3px;
+    margin-bottom: 16px;
+}
+
+.ntq-ai-result pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.ntq-ai-modal-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ntq-ai-model-info {
+    font-size: 12px;
+    color: #666;
+}
+
+.ntq-ai-button {
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.ntq-ai-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(124, 58, 237, 0.2);
+}
+
+.ntq-ai-model-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.ntq-ai-model-selector label {
+    margin-right: 10px;
+    font-weight: 500;
+    color: #333;
+}
+
+.ntq-ai-model-selector select {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ntq-ai-widget-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .ntq-ai-widget-menu {
+        width: 260px;
+    }
+    
+    .ntq-ai-modal-content {
+        width: 95%;
+    }
+    
+    .ntq-ai-widget-button-text {
+        display: none;
+    }
+}
+
+/* Icon */
+.ntq-icon {
+    display: inline-block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+/* From Uiverse.io by elijahgummer */ 
+.analyze svg path.stick {
+  transform: translate(0);
+  animation: stick 2s ease infinite;
+  /* Change wand color */
+}
+
+.analyze svg path.star-1 {
+  fill: #ff4500; /* OrangeRed color */
+  animation: sparkles 2s ease infinite, scaleStars 2s ease infinite,
+    colorChange 2s ease infinite;
+  animation-delay: 150ms;
+}
+
+.analyze svg path.star-2 {
+  fill: #00ff00; /* Lime color */
+  animation: sparkles 2s ease infinite, scaleStars 2s ease infinite,
+    colorChange 2s ease infinite;
+}
+
+.board {
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes sparkles {
+  0% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes stick {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  25% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  50% {
+    transform: translate3d(3px, -2px, 0) rotate(8deg);
+  }
+  75% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0);
+  }
+}
+
+@keyframes scaleStars {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    fill: #ff4500; /* OrangeRed */
+  }
+  25% {
+    fill: #ffd700; /* Gold */
+  }
+  50% {
+    fill: #00ff00; /* Lime */
+  }
+  75% {
+    fill: #1e90ff; /* DodgerBlue */
+  }
+  100% {
+    fill: #ff4500; /* OrangeRed */
+  }
+}
