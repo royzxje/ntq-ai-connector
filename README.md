@@ -27,7 +27,7 @@ NTQ AI Connector là plugin kết nối WordPress với OpenRouter API để t�
 
 ## 📥 Cài đặt
 
-1. Tải plugin từ [trang chủ](https://q2k1.com) hoặc [GitHub repository](https://github.com/yourusername/ntq-ai-connector)
+1. Tải plugin từ [trang chủ](https://q2k1.com) hoặc [GitHub repository](https://github.com/royzxje/ntq-ai-connector)
 2. Upload và cài đặt plugin qua menu Plugins trong WordPress Admin
 3. Kích hoạt plugin
 4. Cấu hình API key và các tùy chọn khác trong trang cài đặt của plugin
