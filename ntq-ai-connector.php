@@ -100,10 +100,13 @@ class NTQ_AI_Connector {
      * Kích hoạt plugin
      */
     public function activate() {
-        // Tạo bảng database
+        // Tạo bảng database nếu cần
         require_once NTQ_AI_CONNECTOR_PLUGIN_DIR . 'includes/class-database.php';
         $database = new Database();
-        $database->create_tables();
+        $current = get_option( 'ntq_ai_connector_db_version' );
+        if ( $current !== $database->get_db_version() ) {
+            $database->create_tables();
+        }
         
         // Thêm các tùy chọn mặc định
         $this->add_default_options();
@@ -121,10 +124,14 @@ class NTQ_AI_Connector {
             'gradient_end' => '#2563EB',
             'enable_animations' => 'yes',
             'daily_limit' => 50,
+            'max_tokens' => 2000,
+            'temperature' => 0.3,
             'widget_header_text' => 'NTQ AI',
             'widget_footer_text' => 'Powered by NTQ AI Connector',
             'summarize_button_text' => 'Tóm tắt bài viết hiện tại',
             'custom_prompt' => "Hãy tóm tắt bài viết sau một cách ngắn gọn và đầy đủ ý chính:\n\nTiêu đề: {title}\n\nNội dung:\n{content}\n\nYêu cầu:\n1. Tóm tắt phải bằng tiếng Việt\n2. Tóm tắt phải ngắn gọn, rõ ràng, nhưng vẫn giữ được các ý chính\n3. Giữ nguyên các thông tin quan trọng như số liệu, dữ liệu\n4. Tổ chức nội dung thành các đoạn ngắn để dễ đọc\n5. Sử dụng cú pháp Markdown để định dạng văn bản:\n   - Sử dụng **từ khóa** hoặc __từ khóa__ cho văn bản in đậm\n   - Sử dụng *văn bản* hoặc _văn bản_ cho văn bản in nghiêng\n   - Sử dụng # cho tiêu đề lớn, ## cho tiêu đề nhỏ hơn\n   - Sử dụng - hoặc * cho danh sách\n   - Sử dụng > cho trích dẫn\n6. Không thêm thông tin không có trong bài viết gốc",
+            'enable_widget' => 'yes',
+            'load_js_local' => 'no',
         );
         
         foreach ( $defaults as $key => $value ) {
@@ -152,10 +159,14 @@ class NTQ_AI_Connector {
             'gradient_end',
             'enable_animations',
             'daily_limit',
+            'max_tokens',
+            'temperature',
             'widget_header_text',
             'widget_footer_text',
             'summarize_button_text',
             'custom_prompt',
+            'enable_widget',
+            'load_js_local',
         );
         
         foreach ( $options as $option ) {

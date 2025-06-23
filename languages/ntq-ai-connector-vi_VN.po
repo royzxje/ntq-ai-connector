@@ -1,0 +1,6 @@
+msgid "NTQ AI Connector - Dashboard"
+msgstr "Bảng điều khiển NTQ AI Connector"
+
+msgid "Chưa có dữ liệu"
+msgstr "Chưa có dữ liệu"
+

@@ -36,6 +36,8 @@ class NTQ_Public {
             return;
         }
         
+        $load_local = get_option( 'ntq_ai_connector_load_js_local', 'no' ) === 'yes';
+
         // Animate.css
         wp_enqueue_style(
             'animate-css',
@@ -45,22 +47,12 @@ class NTQ_Public {
         );
         
         // SweetAlert2
-        wp_enqueue_script(
-            'sweetalert2',
-            'https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js',
-            array(),
-            '11.0.18',
-            true
-        );
+        $sweetalert_src = $load_local ? NTQ_AI_CONNECTOR_PLUGIN_URL . 'assets/js/sweetalert2.all.min.js' : 'https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js';
+        wp_enqueue_script( 'sweetalert2', $sweetalert_src, array(), '11.0.18', true );
         
         // Marked.js - thư viện xử lý Markdown
-        wp_enqueue_script(
-            'marked-js',
-            'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js',
-            array(),
-            '4.3.0',
-            true
-        );
+        $marked_src = $load_local ? NTQ_AI_CONNECTOR_PLUGIN_URL . 'assets/js/marked.min.js' : 'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js';
+        wp_enqueue_script( 'marked-js', $marked_src, array(), '4.3.0', true );
         
         // Heroicons (sprite)
         wp_enqueue_style(

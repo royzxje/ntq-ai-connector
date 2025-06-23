@@ -26,6 +26,13 @@ class Database {
     private $db_version = '1.1';
 
     /**
+     * Lấy version schema hiện tại
+     */
+    public function get_db_version() {
+        return $this->db_version;
+    }
+
+    /**
      * Constructor
      */
     public function __construct() {
