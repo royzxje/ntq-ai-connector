@@ -94,6 +94,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
     
     <div class="ntq-ai-dashboard-stats">
+        <?php if ( empty( $stats['total_requests'] ) ) : ?>
+            <div class="ntq-ai-no-data">
+                <?php _e( 'Chưa có dữ liệu log. Hãy tóm tắt một bài viết để bắt đầu ghi nhận thống kê.', 'ntq-ai-connector' ); ?>
+            </div>
+        <?php endif; ?>
         <div class="ntq-ai-stats-row">            <div class="ntq-ai-stats-box">
                 <h3><?php _e( 'Tổng số request', 'ntq-ai-connector' ); ?></h3>
                 <div class="stats-number"><?php echo isset( $stats['total_requests'] ) ? intval( $stats['total_requests'] ) : 0; ?></div>

@@ -71,6 +71,18 @@ class API_Handler {
         }
 
         $model = empty( $model ) ? $this->default_model : $model;
+
+        // Nếu đã có tóm tắt lưu trong post meta thì sử dụng luôn
+        if ( $post_id > 0 ) {
+            $cached_summary = get_post_meta( $post_id, '_ntq_ai_summary', true );
+            if ( ! empty( $cached_summary ) ) {
+                return array(
+                    'summary' => $cached_summary,
+                    'model'   => $model,
+                    'usage'   => array(),
+                );
+            }
+        }
         
         // Loại bỏ HTML tags và chuẩn hóa nội dung
         $clean_content = wp_strip_all_tags( $content );
@@ -121,7 +133,8 @@ class API_Handler {
             return $response;
         }        // Lưu log với kết quả tóm tắt
         if ( $post_id > 0 ) {
-            $summary_text = isset($response['summary']) ? $response['summary'] : '';
+            $summary_text = isset( $response['summary'] ) ? $response['summary'] : '';
+            update_post_meta( $post_id, '_ntq_ai_summary', wp_kses_post( $summary_text ) );
             $this->log_request( $post_id, $model, $start_time, $response_time, $summary_text );
         }
 
@@ -200,7 +213,7 @@ Yêu cầu:
      * @param array $data Dữ liệu gửi đến API
      * @return array|WP_Error Kết quả từ API hoặc lỗi
      */
-    private function make_api_request( $data ) {
+    private function make_api_request( $data, $max_attempts = 2 ) {
         $headers = array(
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->api_key,
@@ -214,22 +227,43 @@ Yêu cầu:
             'method'  => 'POST',
         );
 
-        // Gửi yêu cầu đến API
-        $response = wp_remote_post( $this->api_endpoint, $args );
+        $attempt     = 0;
+        $response    = null;
+        $status_code = 0;
 
-        // Kiểm tra lỗi
+        while ( $attempt < $max_attempts ) {
+            $response = wp_remote_post( $this->api_endpoint, $args );
+
+            if ( is_wp_error( $response ) ) {
+                error_log( 'NTQ AI Connector API error: ' . $response->get_error_message() );
+                $attempt++;
+                continue;
+            }
+
+            $status_code = wp_remote_retrieve_response_code( $response );
+            if ( $status_code >= 500 ) {
+                error_log( 'NTQ AI Connector API HTTP ' . $status_code );
+                $attempt++;
+                continue;
+            }
+
+            if ( $status_code !== 200 ) {
+                error_log( 'NTQ AI Connector unexpected HTTP ' . $status_code );
+            }
+
+            break;
+        }
+
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
-        // Lấy body từ response
-        $body = wp_remote_retrieve_body( $response );
+        $body   = wp_remote_retrieve_body( $response );
         $result = json_decode( $body, true );
 
-        // Kiểm tra status code
-        $status_code = wp_remote_retrieve_response_code( $response );
         if ( $status_code !== 200 ) {
             $error_message = isset( $result['error']['message'] ) ? $result['error']['message'] : __( 'Lỗi không xác định từ API', 'ntq-ai-connector' );
+            error_log( 'NTQ AI Connector API HTTP ' . $status_code . ' - ' . $error_message );
             return new WP_Error( 'api_error', $error_message );
         }
 

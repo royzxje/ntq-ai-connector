@@ -81,20 +81,21 @@ class Admin {
     /**
      * Đăng ký các cài đặt
      */    public function register_settings() {
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_api_key' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_default_model' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_position' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_header_text' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_footer_text' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_summarize_button_text' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_custom_prompt' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_gradient_start' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_gradient_end' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_enable_animations' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_daily_limit' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_max_tokens' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_temperature' );
-        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_enable_widget' );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_api_key', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_default_model', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_position', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_header_text', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_widget_footer_text', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_summarize_button_text', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_custom_prompt', array( 'sanitize_callback' => 'wp_kses_post' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_gradient_start', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_gradient_end', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_enable_animations', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_daily_limit', array( 'sanitize_callback' => 'absint' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_max_tokens', array( 'sanitize_callback' => 'absint' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_temperature', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_enable_widget', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+        register_setting( 'ntq_ai_connector_settings', 'ntq_ai_connector_load_js_local', array( 'sanitize_callback' => 'sanitize_text_field' ) );
         
         // API Settings section
         add_settings_section(
@@ -212,6 +213,14 @@ class Admin {
             'ntq_ai_connector_enable_widget',
             __( 'Hiển thị Widget', 'ntq-ai-connector' ),
             array( $this, 'enable_widget_callback' ),
+            'ntq_ai_connector_settings',
+            'ntq_ai_connector_widget_settings'
+        );
+
+        add_settings_field(
+            'ntq_ai_connector_load_js_local',
+            __( 'Tải thư viện JS từ máy chủ', 'ntq-ai-connector' ),
+            array( $this, 'load_js_local_callback' ),
             'ntq_ai_connector_settings',
             'ntq_ai_connector_widget_settings'
         );
@@ -490,34 +499,20 @@ Yêu cầu:
             array(), 
             NTQ_AI_CONNECTOR_VERSION 
         );
-          // SweetAlert2
-        wp_enqueue_script( 
-            'sweetalert2', 
-            'https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js', 
-            array(), 
-            '11.0.18', 
-            true 
-        );
+        $load_local = get_option( 'ntq_ai_connector_load_js_local', 'no' ) === 'yes';
+        // SweetAlert2
+        $sweetalert_src = $load_local ? NTQ_AI_CONNECTOR_PLUGIN_URL . 'assets/js/sweetalert2.all.min.js' : 'https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js';
+        wp_enqueue_script( 'sweetalert2', $sweetalert_src, array(), '11.0.18', true );
         
         // Marked.js - thư viện xử lý Markdown (chỉ load trên trang logs)
         if ( 'ntq-ai-connector_page_ntq-ai-connector-logs' === $hook ) {
-            wp_enqueue_script(
-                'marked-js',
-                'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js',
-                array(),
-                '4.3.0',
-                true
-            );
+            $marked_src = $load_local ? NTQ_AI_CONNECTOR_PLUGIN_URL . 'assets/js/marked.min.js' : 'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js';
+            wp_enqueue_script( 'marked-js', $marked_src, array(), '4.3.0', true );
         }
           // Chart.js (chỉ load trên trang dashboard)
         if ( $hook === 'toplevel_page_ntq-ai-connector' ) {
-            wp_enqueue_script( 
-                'chartjs', 
-                'https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js', 
-                array('jquery'), 
-                '3.7.1', 
-                true 
-            );
+            $chart_src = $load_local ? NTQ_AI_CONNECTOR_PLUGIN_URL . 'assets/js/chart.min.js' : 'https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js';
+            wp_enqueue_script( 'chartjs', $chart_src, array( 'jquery' ), '3.7.1', true );
         }
           // Admin script
         $deps = array('jquery', 'sweetalert2');
@@ -634,6 +629,16 @@ Yêu cầu:
         <p class="description">
             <?php _e( 'Cho phép hiển thị hoặc ẩn widget tóm tắt trên trang web.', 'ntq-ai-connector' ); ?>
         </p>
+        <?php
+    }
+
+    /**
+     * Callback cho field Load JS Locally
+     */
+    public function load_js_local_callback() {
+        $load_local = get_option( 'ntq_ai_connector_load_js_local', 'no' );
+        ?>
+        <label><input type="checkbox" name="ntq_ai_connector_load_js_local" value="yes" <?php checked( $load_local, 'yes' ); ?> /> <?php _e( 'Sử dụng các thư viện JS từ plugin thay vì CDN', 'ntq-ai-connector' ); ?></label>
         <?php
     }
 }
